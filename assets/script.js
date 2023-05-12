@@ -110,7 +110,7 @@ fetch('https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=query&format
     var userInput = searchField.querySelector("input").value;
   
     //* Log the user input
-    // console.log(userInput);
+    console.log(userInput);
 
     searchField.querySelector("input").value = "";
   });
