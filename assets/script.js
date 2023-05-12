@@ -67,7 +67,17 @@ fetch('https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=query&format
     //* data to split strings into an array of substrings
     var dataSentenceSplit = dataHtmlRemoved.split("</li>");
     console.log(dataSentenceSplit);
+    var pokemonTriviaEl = document.getElementById("pokemonTrivia");
+    var pokemonTriviaList = [];
+
+    for (var i=0; i < dataSentenceSplit.length; i++) {
+      var sentence = dataSentenceSplit[i][0].trim();
+      if (sentence !== "") {
+        pokemonTriviaList.push(sentence);
+      }
+    }
+    console.log(pokemonTriviaList);
 
     //* testing out what comes out
-    pokemonTriviaEl.textContent = dataSentenceSplit[1];
+    // pokemonTriviaEl.textContent = dataSentenceSplit[1];
   });
