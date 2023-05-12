@@ -112,6 +112,7 @@ fetch('https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=query&format
       // Log the user input
       console.log(userInput);
   
+  
 
     searchField.querySelector("input").value = "";
   });
