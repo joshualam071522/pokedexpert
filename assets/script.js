@@ -13,9 +13,9 @@ var userInput = searchField.querySelector("input").value;
 //* mimikyu page id = 214462
 
 //*fetch pageid for pokemon
-  //TODO charmander is placeholder for searchInput
-function getPokemonDetails () {
-
+//* function to get details from bulbapedia
+function getPokemonWikiDetails () {
+//* fetching pageid from pokemon wiki
   var pokemonName = searchField.querySelector("input").value;
 
   fetch('https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=parse&format=json&page='+pokemonName+'_(Pok%C3%A9mon)'
@@ -27,7 +27,7 @@ function getPokemonDetails () {
     localStorage.setItem(pokemonName+'id',data.parse.pageid);
     searchPokemonArticle();
   })
-
+//* fetching text from pokemon text
   function searchPokemonArticle () {
     var getPageId = localStorage.getItem(pokemonName+"id");
 
@@ -90,6 +90,8 @@ function getPokemonDetails () {
         var dataSentenceSplit = dataHtmlRemoved.split("</li>");
         // console.log(dataSentenceSplit);
         var pokemonTriviaEl = document.getElementById("pokemonTrivia");
+        //* resets the text content of trivia box so it does not show trivia from previous search
+        pokemonTriviaEl.textContent = "";
         var pokemonTriviaList = document.createElement("ul");
         pokemonTriviaList.style.listStyleType = "disc";
         pokemonTriviaList.style.paddingLeft = "20px";
@@ -113,7 +115,7 @@ function getPokemonDetails () {
   // Add event listener to the search button
   searchButton.addEventListener("click", function(event) {
     event.preventDefault(); // Prevent form submission
-    getPokemonDetails();
+    getPokemonWikiDetails();
     // Get the user input from the search field
     var searchField = document.getElementById("searchField");
     var userInput = searchField.querySelector("input").value;
