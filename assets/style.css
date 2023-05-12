@@ -10,3 +10,9 @@
     display: inline-block;
     margin: 5px;
 }
+
+body {
+  /* background-image: url("https://w.wallhaven.cc/full/ey/wallhaven-ey8m5r.jpg"); */
+  background-image: url("https://w.wallhaven.cc/full/k7/wallhaven-k7q9l6.png");
+  background-repeat: repeat;
+}
