@@ -9,7 +9,22 @@ pokemonTriviaEl = document.getElementById('pokemonTrivia');
 //* shaymin page id = 13541
 //* mimikyu page id = 214462
 
-fetch('https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=query&format=json&prop=extracts&pageids=214462', {
+//*fetch pageid for pokemon
+  //TODO charmander is placeholder for searchInput
+  var pokemonName = 'charmander';
+
+  fetch('https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=parse&format=json&page='+pokemonName+'_(Pok%C3%A9mon)'
+  )
+  .then(function(response) {
+    return response.json();
+  })
+  .then(function (data) {
+    localStorage.setItem(pokemonName+'id',data.parse.pageid);
+  })
+
+var getPageId = localStorage.getItem(pokemonName+"id");
+
+fetch('https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=query&format=json&prop=extracts&pageids='+getPageId+'', {
   method: 'GET', //GET is the default.
   credentials: 'same-origin', // include, *same-origin, omit
   redirect: 'follow', // manual, *follow, error
@@ -27,14 +42,14 @@ fetch('https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=query&format
     //* bulbasaur page id=1161
     //* shaymin page id=13541
     //* mimikyu page id = 214462
-    var pageId = 214462;
+    // var pageId = 214462;
    
     //* seeing what i get from extract object
-    var dataExtract = (page[pageId].extract);
-    console.log(dataExtract);
+    var dataExtract = (page[getPageId].extract);
+    // console.log(dataExtract);
     
     //* says that the object is a string
-    console.log(typeof(dataExtract));
+    // console.log(typeof(dataExtract));
 
     //* Find index number for the word trivia in this string to split
     var dataTrivia = dataExtract.indexOf("Trivia");
@@ -45,12 +60,12 @@ fetch('https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=query&format
 
     //* comes out as -1, which means indexOf could not find the word trivia
     //* even though the word is in the string. Do i need to remove html tags first?
-    console.log(dataTrivia);
-    console.log(dataOrigin);
+    // console.log(dataTrivia);
+    // console.log(dataOrigin);
 
     //* slice to only get a portion of the extracted text
     var dataExtractSliced = dataExtract.slice(dataTrivia, dataOrigin);
-    console.log(dataExtractSliced); 
+    // console.log(dataExtractSliced); 
 
     // TODO need to use .replace method to remove all html tags etc.
     //* remove all li tags from text
@@ -94,8 +109,8 @@ fetch('https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=query&format
     var searchField = document.getElementById("searchField");
     var userInput = searchField.querySelector("input").value;
   
-    // Log the user input
-    console.log(userInput);
+    //* Log the user input
+    // console.log(userInput);
 
     searchField.querySelector("input").value = "";
   });
