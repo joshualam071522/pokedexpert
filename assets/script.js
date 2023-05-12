@@ -1,4 +1,5 @@
 pokemonTriviaEl = document.getElementById('pokemonTrivia');
+searchInputEL = document.getElementById('#searchbar');
 
 //* link for action=parse: https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=parse&format=json&page=Bulbasaur_(Pok%C3%A9mon)
 //* link for archives: https://archives.bulbagarden.net/w/api.php?origin=*&action=parse&format=json&page=Category%3ABulbasaur
