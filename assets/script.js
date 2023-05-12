@@ -84,5 +84,16 @@ fetch('https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=query&format
     pokemonTriviaEl.appendChild(pokemonTriviaList);
   });
   
-    //* testing out what comes out
-    // pokemonTriviaEl.textContent = dataSentenceSplit[1];
+  var searchButton = document.getElementById("search");
+
+  // Add event listener to the search button
+  searchButton.addEventListener("click", function(event) {
+    event.preventDefault(); // Prevent form submission
+  
+    // Get the user input from the search field
+    var searchField = document.getElementById("searchField");
+    var userInput = searchField.querySelector("input").value;
+  
+    // Log the user input
+    console.log(userInput);
+  });
