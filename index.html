@@ -13,7 +13,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar role="navigation" aria-label="main navigation">
+        <nav id = "navbar" class="navbar role="navigation" aria-label="main navigation">
           <div class="navbar-brand">
             <a class="navbar-item" href="#">
                 <img src="https://w7.pngwing.com/pngs/665/559/png-transparent-playstation-portable-accessory-pokedex-pokedex-electronics-gadget-electronic-device-thumbnail.png">
@@ -32,13 +32,13 @@
             </p>
         </div>
         <form class="box">
-            <div class="field">
+            <div id = "seachField" class="field">
               <div class="control ">
                 <input class="input has-text-centered" type="text" placeholder="Enter Pokemon name here">
               </div>
             </div>
           
-            <button class="button is-danger is-fullwidth">Search</button>
+            <button id = "search" class="button is-danger is-fullwidth">Search</button>
           </form>
       </section>
 
@@ -47,7 +47,7 @@
           <div class="columns is-vcentered is-centered">
             <div class="column is-one-third">
               <div class="box">
-                <h2 class="title is-4">Poke Stats</h2>
+                <h2 id="pokemonStats" class="title is-4">Poke Stats</h2>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed id enim vitae libero suscipit suscipit vel at lorem. Donec euismod lorem vitae leo tincidunt tristique. Nulla facilisi.</p>
               </div>
             </div>
@@ -55,14 +55,14 @@
               <div class="box">
                 <figure class="image is-2by2">
                   <p class="has-text-centered"><strong>Chosen Pokemon #0000</strong></p> <br>
-                  <img src="https://via.placeholder.com/640x480" alt="Placeholder image">
+                  <img id = "pokemonImage" src="https://via.placeholder.com/640x480" alt="Placeholder image">
                 </figure>
               </div>
             </div>
             <div class="column is-one-third">
-              <div class="box">
+              <div id="triviaBox" class="box">
                 <h2 class="title is-4">Trivia</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed id enim vitae libero suscipit suscipit vel at lorem. Donec euismod lorem vitae leo tincidunt tristique. Nulla facilisi.</p>
+                <p id="pokemonTrivia">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed id enim vitae libero suscipit suscipit vel at lorem. Donec euismod lorem vitae leo tincidunt tristique. Nulla facilisi.</p>
               </div>
             </div>
           </div>
