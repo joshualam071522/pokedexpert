@@ -5,3 +5,8 @@
 .box.has-border {
     border: 2px solid black;
   }
+
+  ul > li {
+    display: inline-block;
+    margin: 5px;
+}
