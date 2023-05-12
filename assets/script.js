@@ -30,7 +30,7 @@ fetch('https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=query&format
     var pageId = 214462;
    
     //* seeing what i get from extract object
-    var dataExtract = (page[pageId].extract);
+    var dataExtract = (page[PageId].extract);
     console.log(dataExtract);
     
     //* says that the object is a string
@@ -94,7 +94,7 @@ fetch('https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=query&format
     var searchField = document.getElementById("searchField");
     var userInput = searchField.querySelector("input").value;
   
-    // Log the user input
+    //* Log the user input
     console.log(userInput);
 
     searchField.querySelector("input").value = "";
