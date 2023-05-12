@@ -88,26 +88,29 @@ fetch('https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=query&format
     pokemonTriviaList.style.paddingLeft = "20px";
 
     for (var i=0; i < dataSentenceSplit.length; i++) {
-        var sentence = dataSentenceSplit[i].trim(); // Access the first element of the array
-        if (sentence !== "") {
-          var listItem = document.createElement("li");
-          listItem.textContent = sentence;
-          pokemonTriviaList.appendChild(listItem);
-        }
-      }
-      console.log(pokemonTriviaList);
-      pokemonTriviaEl.appendChild(pokemonTriviaList);
+     var sentence = dataSentenceSplit[i].trim(); // Access the first element of the array
+     if (sentence !== "") {
+        var listItem = document.createElement("li");
+        listItem.textContent = sentence;
+        pokemonTriviaList.appendChild(listItem);
+    }
+    }
+    console.log(pokemonTriviaList);
+    pokemonTriviaEl.appendChild(pokemonTriviaList);
+});
+
+var searchButton = document.getElementById("search");
+
+// Add event listener to the search button
+searchButton.addEventListener("click", function(event) {
+    event.preventDefault(); // Prevent form submission
+
+    // Get the user input from the search field
+    var searchField = document.getElementById("searchField");
+    var userInput = searchField.querySelector("input").value;
+
+    //* Log the user input
+    // console.log(userInput);
+
+    searchField.querySelector("input").value = "";
     });
-    
-    var searchButton = document.getElementById("search");
-  
-    // Add event listener to the search button
-    searchButton.addEventListener("click", function(event) {
-      event.preventDefault(); // Prevent form submission
-    
-      // Get the user input from the search field
-      var searchField = document.getElementById("searchField");
-      var userInput = searchField.querySelector("input").value;
-    
-      // Log the user input
-      console.log(userInput);
