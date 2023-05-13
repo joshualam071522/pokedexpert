@@ -82,6 +82,10 @@ function getPokemonWikiDetails () {
         .replaceAll('<li>','')
         .replaceAll('<ul>','')
         .replaceAll('</ul>','')
+        .replaceAll('<b>','')
+        .replaceAll('</b>','')
+        .replaceAll('<i>','')
+        .replaceAll('</i>','')
         .replaceAll('Trivia">Trivia</span></h2>','')
         // console.log(dataHtmlRemoved);
         
