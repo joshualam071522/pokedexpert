@@ -25,21 +25,21 @@
       
       <section class="container is-fluid">
         <div class="container field column has-text-centered">
-            <h1 class="title">Pokemon Profile</h1>
+            <h1 class="title">Pokémon Profile</h1>
         </div>
         <div class="container field column content is-medium has-text-centered">
             <p>
-                Search a Pokemon to learn about its stats, general information, and more!
+                Search a Pokémon to learn about its stats and trivia facts!
             </p>
         </div>
         <form class="box">
-            <div id = "searchField" class="field">
+            <div  class="field">
               <div class="control ">
-                <input class="input has-text-centered" type="text" placeholder="Enter Pokemon name here">
+                <input class="input has-text-centered" type="text" placeholder="Enter Pokemon name here" id="searchField">
               </div>
             </div>
           
-            <button id = "search" class="button is-danger is-fullwidth">Search</button>
+            <button class="button is-danger is-fullwidth" onclick="getPokemonWikiDetails(event)">Search</button>
           </form>
       </section>
 
@@ -49,12 +49,8 @@
           <div class="box is-full">
             <h3 id="recentSearches" class="title is-6 has-text-centered">Recent Searches</h3>
             <div class="has-text-centered">
-              <div>
-                <button class="button is-rounded is-small is-danger is-light">Pichu</button>
-                <button class="button is-rounded is-small is-danger is-light">Flareon</button>
-                <button class="button is-rounded is-small is-danger is-light">Meowth</button>
-                <button class="button is-rounded is-small is-danger is-light">Goldeen</button>
-                <button class="button is-rounded is-small is-danger is-light">Haunter</button>
+              <div id="recentSearchesList">
+         
             </div>
             </div>
           </div>
@@ -65,7 +61,7 @@
           <div class="columns is-vcentered is-centered">
             <div class="column is-one-fourth">
               <div class="box">
-                <h2 id="pokemonStats" class="title is-4">Poke Stats</h2>
+                <h2 id="pokemonStats" class="title is-4">Poké Stats</h2>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed id enim vitae libero suscipit suscipit vel at lorem. Donec euismod lorem vitae leo tincidunt tristique. Nulla facilisi.</p>
               </div>
             </div>
