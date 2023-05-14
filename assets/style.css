@@ -16,3 +16,12 @@ body {
   background-image: url("https://w.wallhaven.cc/full/k7/wallhaven-k7q9l6.png");
   background-repeat: repeat;
 }
+
+
+.box {
+  background-color: rgba(255, 255, 255, 60%);
+}
+
+/* .box * {
+  opacity: 1;
+}  */
