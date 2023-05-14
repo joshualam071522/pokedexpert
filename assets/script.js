@@ -99,3 +99,16 @@ fetch('https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=query&format
 
     searchField.querySelector("input").value = "";
   });
+
+  fetch('https://pokeapi.co/api/v2/berry/{id}', {
+    method: 'GET',
+    credentials: 'same-origin',
+    redirect: 'follow',
+  })
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(data) {
+      console.log(data);
+
+    });
