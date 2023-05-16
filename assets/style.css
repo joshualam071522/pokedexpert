@@ -25,3 +25,7 @@ body {
 /* .box * {
   opacity: 1;
 }  */
+
+#recentSearchesList button {
+  margin: 5px;
+}
