@@ -26,3 +26,8 @@ body {
 #recentSearchesList button {
   margin: 5px;
 }
+
+#pokeimg {
+  height:100%;
+  width:100%;
+}
