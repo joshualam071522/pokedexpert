@@ -2,6 +2,7 @@ pokemonTriviaEl = document.getElementById('pokemonTrivia');
 // Get the user input from the search field
 var searchInput = document.getElementById("searchField");
 var searchButton = document.getElementById("search");
+var pokeimglistEl = document.getElementById('pokeimglist')
 var storedPokemon = JSON.parse(localStorage.getItem('pokemon')) || [];
 let recentSearchesListDiv = document.getElementById('recentSearchesList');
 
@@ -18,6 +19,30 @@ function displayRecentSearch () {
     recentSearchesBtn.append(nameOfPokemon);
     recentSearchesListDiv.append(recentSearchesBtn);
   }
+}
+//* function to retrieve pokemon sprite img
+function getPokemonSprite (searchInput) {
+  fetch ('https://pokeapi.co/api/v2/pokemon/'+searchInput+'')
+  .then (function (response) {
+    return response.json();
+  })
+  .then (function (data) {
+  //* clears HTML of element so that sprites from previous searches do not stay
+  pokeimglistEl.innerHTML = '';
+
+  //*creates h2 element for name of pokemon and appends
+  var pokeimgname = document.createElement('h2');
+  pokeimgname.textContent = data.species.name;
+  pokeimgname.classList.add('title', 'has-text-centered', 'is-4');
+  pokeimglist.appendChild(pokeimgname);
+  
+  //*creates img element for pokemon and appends
+  var retrievedImg = data.sprites.front_default;
+  var pokemonImg = document.createElement('img');
+  pokemonImg.setAttribute('src', retrievedImg);
+  pokemonImg.setAttribute('alt', data.species.name);
+  pokeimglistEl.appendChild(pokemonImg);
+  })
 }
 
 //* calls display recent searches so it loads up with the page
@@ -117,7 +142,8 @@ fetch('https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=query&format
     //TODO change datasentencesplit.length to 5 to show 3 items from trivia
     //* can use dataSentenceSplit.length if want to load up all the trivia facts
     for (var i=0; i < 5; i++) {
-      var sentence = dataSentenceSplit[i].trim(); // Access the first element of the array
+      //*removed .trim because it was showing up errors. might need to put back in?
+      var sentence = dataSentenceSplit[i]; // Access the first element of the array
       if (sentence !== "") {
         var listItem = document.createElement("li");
         listItem.textContent = sentence;
@@ -156,6 +182,7 @@ searchButton.addEventListener("click", function(event) {
   event.preventDefault();
   //* calls function to start searching API
   getPokemonWikiDetails(searchInput.value);
+  getPokemonSprite(searchInput.value)
 
   //* resets the search bar
   searchField.value = "";
@@ -165,5 +192,6 @@ searchButton.addEventListener("click", function(event) {
 recentSearchesListDiv.addEventListener('click', function(event) {
 console.log(event.target.textContent);
 getPokemonWikiDetails (event.target.textContent);
+getPokemonSprite(event.target.textContent);
 })
 
