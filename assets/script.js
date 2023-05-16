@@ -200,8 +200,18 @@ getPokemonSprite(event.target.textContent);
 fetchPokemonstat(event.target.textContent);
 })
 
+//*function to uncapitalize first letter because pokeAPI requires lowercase pokemon name in search
+function upperCasetoLowercase () {
+  var upperCase = event.target.textContent;
+  //*replaces the first letter with a lowercase version of that letter
+  var lowerCase = upperCase.toLowerCase();
+  console.log(lowerCase);
+  //* passes in the lowercase pokemon name into the API so the search will work.
+  getPokemonSprite(lowerCase);
+}
 
 var pokedex = document.getElementById('pokemonStats');
+
 var fetchPokemonstat = function (searchInput) {
   fetch('https://pokeapi.co/api/v2/pokemon/' + searchInput, {})
     .then(function (res) {
@@ -211,7 +221,7 @@ var fetchPokemonstat = function (searchInput) {
       pokedex.innerHTML = '';
 
       var pokemon = {
-        type: data.types.map(function (type) { return capitalizeFirstLetter(type.type.name); }).join(', '),
+        type: data.types.map(function (type) { return type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1); }).join(', '),
         height: convertToInches(data.height), // Convert height to inches
         weight: convertToPounds(data.weight), // Convert weight to pounds
         abilities: data.abilities.map(function (ability) { return ability.ability.name; }).join(', '), // Get abilities
@@ -242,10 +252,6 @@ var convertToInches = function (heightInDecimeters) {
   // 1 decimeter is equal to 3.93701 inches
   var heightInInches = heightInDecimeters * 3.93701;
   return heightInInches.toFixed(2); // Round to 2 decimal places
-};
-
-var capitalizeFirstLetter = function (str) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
 var acronymizeStatLabel = function (label) {
