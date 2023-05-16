@@ -215,7 +215,11 @@ upperCasetoLowercase();
 
 var pokedex = document.getElementById('pokemonStats');
 var fetchPokemonstat = function (searchInput) {
-  fetch('https://pokeapi.co/api/v2/pokemon/' + searchInput, {})
+  fetch('https://pokeapi.co/api/v2/pokemon/' + searchInput, { 
+    method: 'GET', //GET is the default.
+    credentials: 'same-origin', // include, *same-origin, omit
+    redirect: 'follow', // manual, *follow, error
+    })
     .then(function (res) {
       return res.json();
     })
