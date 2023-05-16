@@ -31,10 +31,12 @@ function getPokemonSprite (searchInput) {
   pokeimglistEl.innerHTML = '';
 
   //*creates h2 element for name of pokemon and appends
-  var pokeimgname = document.createElement('h2');
-  pokeimgname.textContent = data.species.name;
-  pokeimgname.classList.add('title', 'has-text-centered', 'is-4');
-  pokeimglistEl.appendChild(pokeimgname);
+  var pokeNameh2 = document.createElement('h2');
+  var retrievedName = data.species.name;
+  //* capitalizes the first letter of the name of pokemon for aesthetic purposes
+  pokeNameh2.textContent = retrievedName.charAt(0).toUpperCase() + retrievedName.slice(1);
+  pokeNameh2.classList.add('title', 'has-text-centered', 'is-4');
+  pokeimglistEl.appendChild(pokeNameh2);
   
   //*creates img element for pokemon and appends
   var retrievedImg = data.sprites.front_default;
@@ -193,6 +195,18 @@ searchButton.addEventListener("click", function(event) {
 recentSearchesListDiv.addEventListener('click', function(event) {
 console.log(event.target.textContent);
 getPokemonWikiDetails (event.target.textContent);
-getPokemonSprite(event.target.textContent);
+
+//*function to uncapitalize first letter because pokeAPI requires lowercase pokemon name in search
+function upperCasetoLowercase () {
+  var upperCase = event.target.textContent;
+  //*replaces the first letter with a lowercase version of that letter
+  var lowerCase = upperCase.charAt(0).toLowerCase() + upperCase.slice(1)
+  console.log(lowerCase);
+  //* passes in the lowercase pokemon name into the API so the search will work.
+  getPokemonSprite(lowerCase);
+}
+//* calls the function on event listener
+upperCasetoLowercase();
+// getPokemonSprite(event.target.textContent);
 })
 
