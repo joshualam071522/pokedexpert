@@ -2,8 +2,11 @@ pokemonTriviaEl = document.getElementById('pokemonTrivia');
 // Get the user input from the search field
 var searchInput = document.getElementById("searchField");
 var searchButton = document.getElementById("search");
+var pokeimglistEl = document.getElementById('pokeimglist')
 var storedPokemon = JSON.parse(localStorage.getItem('pokemon')) || [];
 let recentSearchesListDiv = document.getElementById('recentSearchesList');
+
+
 
 //* code to display recent search
 function displayRecentSearch () {
@@ -18,6 +21,32 @@ function displayRecentSearch () {
     recentSearchesBtn.append(nameOfPokemon);
     recentSearchesListDiv.append(recentSearchesBtn);
   }
+}
+//* function to retrieve pokemon sprite img
+function getPokemonSprite (searchInput) {
+  fetch ('https://pokeapi.co/api/v2/pokemon/'+searchInput+'')
+  .then (function (response) {
+    return response.json();
+  })
+  .then (function (data) {
+  //* clears HTML of element so that sprites from previous searches do not stay
+  pokeimglistEl.innerHTML = '';
+
+
+  //*creates h2 element for name of pokemon and appends
+  var pokeimgname = document.createElement('h2');
+  pokeimgname.textContent = data.species.name;
+  pokeimgname.classList.add('title', 'has-text-centered', 'is-4');
+  pokeimglistEl.appendChild(pokeimgname);
+  
+  //*creates img element for pokemon and appends
+  var retrievedImg = data.sprites.front_default;
+  var pokemonImg = document.createElement('img');
+  pokemonImg.setAttribute('src', retrievedImg);
+  pokemonImg.setAttribute('alt', data.species.name);
+  pokemonImg.setAttribute('id', 'pokeimg');
+  pokeimglistEl.appendChild(pokemonImg);
+  })
 }
 
 //* calls display recent searches so it loads up with the page
@@ -117,7 +146,8 @@ fetch('https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=query&format
     //TODO change datasentencesplit.length to 5 to show 3 items from trivia
     //* can use dataSentenceSplit.length if want to load up all the trivia facts
     for (var i=0; i < 5; i++) {
-      var sentence = dataSentenceSplit[i].trim(); // Access the first element of the array
+      //*removed .trim because it was showing up errors. might need to put back in?
+      var sentence = dataSentenceSplit[i]; // Access the first element of the array
       if (sentence !== "") {
         var listItem = document.createElement("li");
         listItem.textContent = sentence;
@@ -155,8 +185,9 @@ searchButton.addEventListener("click", function(event) {
   //* prevents form submission
   event.preventDefault();
   //* calls function to start searching API
-  getPokemonWikiDetails(searchInput.value);
-
+  getPokemonWikiDetails(searchInput.value.toLowerCase());
+  getPokemonSprite(searchInput.value.toLowerCase());
+  fetchPokemonstat(searchInput.value.toLowerCase());
   //* resets the search bar
   searchField.value = "";
 });
@@ -165,47 +196,71 @@ searchButton.addEventListener("click", function(event) {
 recentSearchesListDiv.addEventListener('click', function(event) {
 console.log(event.target.textContent);
 getPokemonWikiDetails (event.target.textContent);
+getPokemonSprite(event.target.textContent);
+fetchPokemonstat(event.target.textContent);
 })
-
 var pokedex = document.getElementById('pokedex');
+var fetchPokemonstat = function (searchInput) {
+  fetch('https://pokeapi.co/api/v2/pokemon/' + searchInput, {})
+    .then(function (res) {
+      return res.json();
+    })
+    .then(function (data) {
+      pokedex.innerHTML = '';
 
-var fetchPokemon = function (searchTerm) {
-  fetch('https://pokeapi.co/api/v2/pokemon/' + searchTerm, {
-      method: 'GET',
-      credentials: 'same-origin',
-      redirect: 'follow'
-  })
-      .then(function (res) { return res.json(); })
-      .then(function (data) {
-          var pokemon = {
-              name: data.name,
-              type: data.types.map(function (type) { return type.type.name; }).join(', ')
+      var pokemon = {
+        type: data.types.map(function (type) { return type.type.name; }).join(', '),
+        height: convertToInches(data.height), // Convert height to inches
+        weight: convertToPounds(data.weight), // Convert weight to pounds
+        abilities: data.abilities.map(function (ability) { return ability.ability.name; }).join(', '), // Get abilities
+        baseExperience: data.base_experience, // Get base experience
+        stats: data.stats.map(function (stat) { 
+          return {
+            name: stat.stat.name,
+            value: stat.base_stat
           };
-          displayPokemon(pokemon);
-      })
-      .catch(function (error) {
-          console.log('Error:', error);
-          displayPokemon(null);
-      });
+        }) // Get stats
+      };
+
+      displayPokemon(pokemon);
+    })
+    .catch(function (error) {
+      console.log('Error:', error);
+      displayPokemon(null);
+    });
 };
+
+var convertToPounds = function (weightInHectograms) {
+  // 1 hectogram is equal to 0.220462262 pounds
+  var weightInPounds = weightInHectograms * 0.220462262;
+  return weightInPounds.toFixed(2); // Round to 2 decimal places
+};
+
+var convertToInches = function (heightInDecimeters) {
+  // 1 decimeter is equal to 3.93701 inches
+  var heightInInches = heightInDecimeters * 3.93701;
+  return heightInInches.toFixed(2); // Round to 2 decimal places
+};
+
 var displayPokemon = function (pokemon) {
-    if (pokemon === null) {
-        pokedex.innerHTML = 'Pokemon not found.';
-        return;
-    }
+  if (pokemon === null) {
+    pokedex.innerHTML = 'Pokemon not found.';
+    return;
+  }
 
-    var pokemonHTMLString = '\n        <p> ' + pokemon.name + '</p>\n        <p>Type: ' + pokemon.type + '</p>\n    ';
-    pokedex.innerHTML = pokemonHTMLString;
+  var pokemonHTMLString = '<p>Base Experience: ' + pokemon.baseExperience + '</p>\n'
+    + '<p>Type: ' + pokemon.type + '</p>\n'
+    + '<p>Height: ' + pokemon.height + ' in</p>\n'
+    + '<p>Weight: ' + pokemon.weight + ' lbs</p>\n'
+    + '<p>Abilities: ' + pokemon.abilities + '</p>\n'
+    + '<h3>Stats:</h3>'
+    + '<ul>';
+
+  for (var i = 0; i < pokemon.stats.length; i++) {
+    pokemonHTMLString += '<li>' + pokemon.stats[i].name + ': ' + pokemon.stats[i].value + '</li>';
+  }
+
+  pokemonHTMLString += '</ul>';
+
+  pokedex.innerHTML = pokemonHTMLString;
 };
-
-searchButton.addEventListener('click', function () {
-    var searchTerm = searchInput.value.toLowerCase();
-    fetchPokemon(searchTerm);
-});
-
-searchInput.addEventListener('keydown', function (event) {
-    if (event.key === 'Enter') {
-        var searchTerm = searchInput.value.toLowerCase();
-        fetchPokemon(searchTerm);
-    }
-});
