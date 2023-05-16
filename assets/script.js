@@ -6,8 +6,6 @@ var pokeimglistEl = document.getElementById('pokeimglist')
 var storedPokemon = JSON.parse(localStorage.getItem('pokemon')) || [];
 let recentSearchesListDiv = document.getElementById('recentSearchesList');
 
-
-
 //* code to display recent search
 function displayRecentSearch () {
   recentSearchesListDiv.innerHTML = '';
@@ -32,12 +30,13 @@ function getPokemonSprite (searchInput) {
   //* clears HTML of element so that sprites from previous searches do not stay
   pokeimglistEl.innerHTML = '';
 
-
   //*creates h2 element for name of pokemon and appends
-  var pokeimgname = document.createElement('h2');
-  pokeimgname.textContent = data.species.name;
-  pokeimgname.classList.add('title', 'has-text-centered', 'is-4');
-  pokeimglistEl.appendChild(pokeimgname);
+  var pokeNameh2 = document.createElement('h2');
+  var retrievedName = data.species.name;
+  //* capitalizes the first letter of the name of pokemon for aesthetic purposes
+  pokeNameh2.textContent = retrievedName.charAt(0).toUpperCase() + retrievedName.slice(1);
+  pokeNameh2.classList.add('title', 'has-text-centered', 'is-4');
+  pokeimglistEl.appendChild(pokeNameh2);
   
   //*creates img element for pokemon and appends
   var retrievedImg = data.sprites.front_default;
@@ -188,6 +187,7 @@ searchButton.addEventListener("click", function(event) {
   getPokemonWikiDetails(searchInput.value.toLowerCase());
   getPokemonSprite(searchInput.value.toLowerCase());
   fetchPokemonstat(searchInput.value.toLowerCase());
+
   //* resets the search bar
   searchField.value = "";
 });
@@ -196,9 +196,7 @@ searchButton.addEventListener("click", function(event) {
 recentSearchesListDiv.addEventListener('click', function(event) {
 console.log(event.target.textContent);
 getPokemonWikiDetails (event.target.textContent);
-getPokemonSprite(event.target.textContent);
 fetchPokemonstat(event.target.textContent);
-})
 
 //*function to uncapitalize first letter because pokeAPI requires lowercase pokemon name in search
 function upperCasetoLowercase () {
@@ -208,10 +206,14 @@ function upperCasetoLowercase () {
   console.log(lowerCase);
   //* passes in the lowercase pokemon name into the API so the search will work.
   getPokemonSprite(lowerCase);
+  
 }
+//* calls the function on event listener
+upperCasetoLowercase();
+// getPokemonSprite(event.target.textContent);
+})
 
 var pokedex = document.getElementById('pokemonStats');
-
 var fetchPokemonstat = function (searchInput) {
   fetch('https://pokeapi.co/api/v2/pokemon/' + searchInput, {})
     .then(function (res) {
@@ -221,7 +223,7 @@ var fetchPokemonstat = function (searchInput) {
       pokedex.innerHTML = '';
 
       var pokemon = {
-        type: data.types.map(function (type) { return type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1); }).join(', '),
+        type: data.types.map(function (type) { return capitalizeFirstLetter(type.type.name); }).join(', '),
         height: convertToInches(data.height), // Convert height to inches
         weight: convertToPounds(data.weight), // Convert weight to pounds
         abilities: data.abilities.map(function (ability) { return ability.ability.name; }).join(', '), // Get abilities
@@ -254,6 +256,10 @@ var convertToInches = function (heightInDecimeters) {
   return heightInInches.toFixed(2); // Round to 2 decimal places
 };
 
+var capitalizeFirstLetter = function (str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
 var acronymizeStatLabel = function (label) {
   var acronym = label.split('.').map(function (word) {
     return word.charAt(0).toUpperCase();
@@ -284,3 +290,4 @@ var displayPokemon = function (pokemon) {
 
   pokedex.innerHTML = pokemonHTMLString;
 };
+
