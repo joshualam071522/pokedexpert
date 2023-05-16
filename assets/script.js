@@ -34,13 +34,14 @@ function getPokemonSprite (searchInput) {
   var pokeimgname = document.createElement('h2');
   pokeimgname.textContent = data.species.name;
   pokeimgname.classList.add('title', 'has-text-centered', 'is-4');
-  pokeimglist.appendChild(pokeimgname);
+  pokeimglistEl.appendChild(pokeimgname);
   
   //*creates img element for pokemon and appends
   var retrievedImg = data.sprites.front_default;
   var pokemonImg = document.createElement('img');
   pokemonImg.setAttribute('src', retrievedImg);
   pokemonImg.setAttribute('alt', data.species.name);
+  pokemonImg.setAttribute('id', 'pokeimg');
   pokeimglistEl.appendChild(pokemonImg);
   })
 }
@@ -181,8 +182,8 @@ searchButton.addEventListener("click", function(event) {
   //* prevents form submission
   event.preventDefault();
   //* calls function to start searching API
-  getPokemonWikiDetails(searchInput.value);
-  getPokemonSprite(searchInput.value)
+  getPokemonWikiDetails(searchInput.value.toLowerCase());
+  getPokemonSprite(searchInput.value.toLowerCase());
 
   //* resets the search bar
   searchField.value = "";
