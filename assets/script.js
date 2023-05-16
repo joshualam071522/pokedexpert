@@ -200,7 +200,7 @@ getPokemonWikiDetails (event.target.textContent);
 function upperCasetoLowercase () {
   var upperCase = event.target.textContent;
   //*replaces the first letter with a lowercase version of that letter
-  var lowerCase = upperCase.charAt(0).toLowerCase() + upperCase.slice(1)
+  var lowerCase = upperCase.toLowerCase();
   console.log(lowerCase);
   //* passes in the lowercase pokemon name into the API so the search will work.
   getPokemonSprite(lowerCase);
