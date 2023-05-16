@@ -159,22 +159,24 @@ getPokemonWikiDetails (event.target.textContent);
 var pokedex = document.getElementById('pokedex');
 
 var fetchPokemon = function (searchTerm) {
-    var url = 'https://pokeapi.co/api/v2/pokemon/' + searchTerm;
-    fetch(url)
-        .then(function (res) { return res.json(); })
-        .then(function (data) {
-            var pokemon = {
-                name: data.name,
-                type: data.types.map(function (type) { return type.type.name; }).join(', ')
-            };
-            displayPokemon(pokemon);
-        })
-        .catch(function (error) {
-            console.log('Error:', error);
-            displayPokemon(null);
-        });
+  fetch('https://pokeapi.co/api/v2/pokemon/' + searchTerm, {
+      method: 'GET',
+      credentials: 'same-origin',
+      redirect: 'follow'
+  })
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+          var pokemon = {
+              name: data.name,
+              type: data.types.map(function (type) { return type.type.name; }).join(', ')
+          };
+          displayPokemon(pokemon);
+      })
+      .catch(function (error) {
+          console.log('Error:', error);
+          displayPokemon(null);
+      });
 };
-
 var displayPokemon = function (pokemon) {
     if (pokemon === null) {
         pokedex.innerHTML = 'Pokemon not found.';
