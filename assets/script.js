@@ -1,131 +1,158 @@
 pokemonTriviaEl = document.getElementById('pokemonTrivia');
 // Get the user input from the search field
-var searchField = document.getElementById("searchField");
-var userInput = searchField.querySelector("input").value;
+var searchInput = document.getElementById("searchField");
+var searchButton = document.getElementById("search");
+var storedPokemon = JSON.parse(localStorage.getItem('pokemon')) || [];
+let recentSearchesListDiv = document.getElementById('recentSearchesList');
 
-//* link for action=parse: https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=parse&format=json&page=Bulbasaur_(Pok%C3%A9mon)
-//* link for archives: https://archives.bulbagarden.net/w/api.php?origin=*&action=parse&format=json&page=Category%3ABulbasaur
-//* link for query: https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=query&format=json&prop=extracts&pageids=1161
+//* code to display recent search
+function displayRecentSearch () {
+  recentSearchesListDiv.innerHTML = '';
+  //* check local storage of array
+  console.log(storedPokemon);
+  //* for loop that creates a button element with name of pokemon in the array and appends to recent searches div
+  for (let i = 0; i < storedPokemon.length; i++) {
+    const nameOfPokemon = storedPokemon[i];
+    let recentSearchesBtn = document.createElement('BUTTON');
+    recentSearchesBtn.classList.add('button', 'is-rounded', 'is-small','is-danger','is-light');
+    recentSearchesBtn.append(nameOfPokemon);
+    recentSearchesListDiv.append(recentSearchesBtn);
+  }
+}
 
-//TODO need to do a fetch for parse link to get pageid # for querysearch
-//* bulbasaur page id = 1161
-//* shaymin page id = 13541
-//* mimikyu page id = 214462
+//* calls display recent searches so it loads up with the page
+displayRecentSearch();
 
-//*fetch pageid for pokemon
-//* function to get details from bulbapedia
-function getPokemonWikiDetails () {
-//* fetching pageid from pokemon wiki
-  var pokemonName = searchField.querySelector("input").value;
+//* example link for action=parse: https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=parse&format=json&page=Bulbasaur_(Pok%C3%A9mon)
+//* example link for query: https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=query&format=json&prop=extracts&pageids=1161
 
-  fetch('https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=parse&format=json&page='+pokemonName+'_(Pok%C3%A9mon)'
+//* function to fetch pageid for specific pokemon
+function getPokemonWikiDetails (searchInput) {
+
+  fetch('https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=parse&format=json&page='+searchInput+'_(Pok%C3%A9mon)'
   )
   .then(function(response) {
     return response.json();
   })
+
   .then(function (data) {
-    localStorage.setItem(pokemonName+'id',data.parse.pageid);
-    searchPokemonArticle();
-  })
-//* fetching text from pokemon text
-  function searchPokemonArticle () {
-    var getPageId = localStorage.getItem(pokemonName+"id");
-
-    fetch('https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=query&format=json&prop=extracts&pageids='+getPageId+'', {
-      method: 'GET', //GET is the default.
-      credentials: 'same-origin', // include, *same-origin, omit
-      redirect: 'follow', // manual, *follow, error
-    })
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (data) {
-        // console.log(data);
-        //* getting to root of info i need to extract
-        var page = data.query.pages;
-        
-        //TODO NEED TO USE PAGEID FROM FETCH PARSE JSON DATA AS THE PAGE ID
-        //*page Id for bulbasaur page, need to use object key later
-        //* bulbasaur page id=1161
-        //* shaymin page id=13541
-        //* mimikyu page id = 214462
-        // var pageId = 214462;
-      
-        //* seeing what i get from extract object
-        var dataExtract = (page[getPageId].extract);
-        // console.log(dataExtract);
-        
-        //* says that the object is a string
-        // console.log(typeof(dataExtract));
-
-        //* Find index number for the word trivia in this string to split
-        var dataTrivia = dataExtract.indexOf("Trivia");
-
-        //* find index number of origin section, which is after trivia section, to slice
-        //TODO USE "\" TO TARGET QUOTATION MARKS WITHIN TEXT TO SLICE BETTER
-        var dataOrigin = dataExtract.indexOf(">Origin<");
-
-        //* comes out as -1, which means indexOf could not find the word trivia
-        //* even though the word is in the string. Do i need to remove html tags first?
-        // console.log(dataTrivia);
-        // console.log(dataOrigin);
-
-        //* slice to only get a portion of the extracted text
-        var dataExtractSliced = dataExtract.slice(dataTrivia, dataOrigin);
-        // console.log(dataExtractSliced); 
-
-        // TODO need to use .replace method to remove all html tags etc.
-        //* remove all li tags from text
-        //* USE "\" CHARACTER TO TARGET QUOTATION MARKS IN STRINGS
-        var dataHtmlRemoved = dataExtractSliced
-        .replaceAll('<h3><span id=\"Origin\"', '')
-        .replaceAll('<li>','')
-        .replaceAll('<ul>','')
-        .replaceAll('</ul>','')
-        .replaceAll('<b>','')
-        .replaceAll('</b>','')
-        .replaceAll('<i>','')
-        .replaceAll('</i>','')
-        .replaceAll('Trivia">Trivia</span></h2>','')
-        // console.log(dataHtmlRemoved);
-        
-
-        //* data to split strings into an array of substrings
-        var dataSentenceSplit = dataHtmlRemoved.split("</li>");
-        // console.log(dataSentenceSplit);
-        var pokemonTriviaEl = document.getElementById("pokemonTrivia");
-        //* resets the text content of trivia box so it does not show trivia from previous search
-        pokemonTriviaEl.textContent = "";
-        var pokemonTriviaList = document.createElement("ul");
-        pokemonTriviaList.style.listStyleType = "disc";
-        pokemonTriviaList.style.paddingLeft = "20px";
-
-        for (var i=0; i < dataSentenceSplit.length; i++) {
-          var sentence = dataSentenceSplit[i].trim(); // Access the first element of the array
-          if (sentence !== "") {
-            var listItem = document.createElement("li");
-            listItem.textContent = sentence;
-            pokemonTriviaList.appendChild(listItem);
-          }
-        }
-        console.log(pokemonTriviaList);
-        pokemonTriviaEl.appendChild(pokemonTriviaList);
-      });
+    //* catch error to stop if can't find pageid using fetch
+    try {
+    console.log(data.parse.pageid);
+    var pageid = data.parse.pageid;
+    searchPokemonArticle(pageid, searchInput);
     }
+    catch(error) {
+    //TODO add a modal for if we cannot search the pokemone name (ex: spelling error?)
+    console.log('dangit!')
+    return;
+    }
+  })
 }
-  
-  var searchButton = document.getElementById("search");
 
-  // Add event listener to the search button
-  searchButton.addEventListener("click", function(event) {
-    event.preventDefault(); // Prevent form submission
-    getPokemonWikiDetails();
-    // Get the user input from the search field
-    var searchField = document.getElementById("searchField");
-    var userInput = searchField.querySelector("input").value;
-  
-    //* Log the user input
-    console.log(userInput);
+//* fetching text from pokemon text using pageid
+function searchPokemonArticle (pageid, searchInput) {
 
-    searchField.querySelector("input").value = "";
-  });
+localStorage.setItem('currentpageid', JSON.stringify(pageid));
+
+fetch('https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=query&format=json&prop=extracts&pageids='+pageid+'', {
+  method: 'GET', //GET is the default.
+  credentials: 'same-origin', // include, *same-origin, omit
+  redirect: 'follow', // manual, *follow, error
+  })
+  .then(function (response) {
+    return response.json();
+  })
+  .then(function (data) {
+
+    //* getting to root of info needed to extract
+    var page = data.query.pages;
+  
+    var dataExtract = (page[pageid].extract);
+
+    //* Find index number for the word trivia in the text
+    var dataTrivia = dataExtract.indexOf("Trivia");
+
+    //* find index number of origin section, which is after trivia section, to slice
+    //TODO USE "\" TO TARGET QUOTATION MARKS WITHIN TEXT TO SLICE BETTER
+    var dataOrigin = dataExtract.indexOf(">Origin<");
+
+    //* slice to only get the trivia section of the extracted text
+    var dataExtractSliced = dataExtract.slice(dataTrivia, dataOrigin);
+
+    //* USE "\" CHARACTER TO TARGET QUOTATION MARKS IN STRINGS
+    //* Removes all HTML and formatting elements from text
+    var dataHtmlRemoved = dataExtractSliced
+    .replaceAll('<h3><span id=\"Origin\"', '')
+    .replaceAll('<li>','')
+    .replaceAll('<ul>','')
+    .replaceAll('</ul>','')
+    .replaceAll('<b>','')
+    .replaceAll('</b>','')
+    .replaceAll('<i>','')
+    .replaceAll('</i>','')
+    .replaceAll('Trivia">Trivia</span></h2>','')
+
+    //* data to split sentences into an array of substrings
+    var dataSentenceSplit = dataHtmlRemoved.split("</li>");
+
+    var pokemonTriviaEl = document.getElementById("pokemonTrivia");
+    //* resets the text content of trivia box so it does not show trivia from previous search
+    pokemonTriviaEl.textContent = "";
+    var pokemonTriviaList = document.createElement("ul");
+    pokemonTriviaList.style.listStyleType = "disc";
+    pokemonTriviaList.style.paddingLeft = "20px";
+    
+    //TODO change datasentencesplit.length to 4 to show 3 items from trivia
+    for (var i=0; i < dataSentenceSplit.length; i++) {
+      var sentence = dataSentenceSplit[i].trim(); // Access the first element of the array
+      if (sentence !== "") {
+        var listItem = document.createElement("li");
+        listItem.textContent = sentence;
+        pokemonTriviaList.appendChild(listItem);
+      }
+    }
+    pokemonTriviaEl.appendChild(pokemonTriviaList);
+
+    addSearchInputToRecentSearch (searchInput);
+  })
+}
+
+function addSearchInputToRecentSearch (searchInput) {
+  //* prevents duplicate pokemon names in local storage
+  var checkPokemonNameInRecentSearchIndex = storedPokemon.indexOf(searchInput);
+  if (checkPokemonNameInRecentSearchIndex !== -1) {
+    storedPokemon.splice(checkPokemonNameInRecentSearchIndex, 1);
+  }
+
+  //* pushes pokemone names to the back of the array
+  storedPokemon.push(searchInput);
+  
+  //* if array length is greater than 5, remove the first pokemone name in the array
+  if (storedPokemon.length > 5) {
+    storedPokemon.shift();
+  }
+  //* updates new array to local storage
+  localStorage.setItem('pokemon', JSON.stringify(storedPokemon))
+  //* calls function to show updated array on webpage
+  displayRecentSearch();
+}
+
+//* Add event listener to the search button
+searchButton.addEventListener("click", function(event) {
+  //* prevents form submission
+  event.preventDefault();
+  //* calls function to start searching API
+  getPokemonWikiDetails(searchInput.value);
+
+  //* resets the search bar
+  searchField.value = "";
+});
+
+//*event listener for recent searches
+recentSearchesListDiv.addEventListener('click', function(event) {
+console.log(event.target.textContent);
+getPokemonWikiDetails (event.target.textContent);
+})
+
+  
