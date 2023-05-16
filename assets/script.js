@@ -199,7 +199,9 @@ getPokemonWikiDetails (event.target.textContent);
 getPokemonSprite(event.target.textContent);
 fetchPokemonstat(event.target.textContent);
 })
-var pokedex = document.getElementById('pokedex');
+
+
+var pokedex = document.getElementById('pokemonStats');
 var fetchPokemonstat = function (searchInput) {
   fetch('https://pokeapi.co/api/v2/pokemon/' + searchInput, {})
     .then(function (res) {
@@ -209,17 +211,17 @@ var fetchPokemonstat = function (searchInput) {
       pokedex.innerHTML = '';
 
       var pokemon = {
-        type: data.types.map(function (type) { return type.type.name; }).join(', '),
+        type: data.types.map(function (type) { return capitalizeFirstLetter(type.type.name); }).join(', '),
         height: convertToInches(data.height), // Convert height to inches
         weight: convertToPounds(data.weight), // Convert weight to pounds
         abilities: data.abilities.map(function (ability) { return ability.ability.name; }).join(', '), // Get abilities
-        baseExperience: data.base_experience, // Get base experience
         stats: data.stats.map(function (stat) { 
           return {
-            name: stat.stat.name,
+            name: acronymizeStatLabel(stat.stat.name),
             value: stat.base_stat
           };
-        }) // Get stats
+        }), // Get stats
+        baseExperience: data.base_experience // Get base experience
       };
 
       displayPokemon(pokemon);
@@ -242,25 +244,37 @@ var convertToInches = function (heightInDecimeters) {
   return heightInInches.toFixed(2); // Round to 2 decimal places
 };
 
+var capitalizeFirstLetter = function (str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
+var acronymizeStatLabel = function (label) {
+  var acronym = label.split('.').map(function (word) {
+    return word.charAt(0).toUpperCase();
+  }).join('.');
+
+  return acronym;
+};
+
 var displayPokemon = function (pokemon) {
   if (pokemon === null) {
     pokedex.innerHTML = 'Pokemon not found.';
     return;
   }
 
-  var pokemonHTMLString = '<p>Base Experience: ' + pokemon.baseExperience + '</p>\n'
-    + '<p>Type: ' + pokemon.type + '</p>\n'
+  var pokemonHTMLString = '<p>Type: ' + pokemon.type + '</p>\n'
     + '<p>Height: ' + pokemon.height + ' in</p>\n'
     + '<p>Weight: ' + pokemon.weight + ' lbs</p>\n'
     + '<p>Abilities: ' + pokemon.abilities + '</p>\n'
-    + '<h3>Stats:</h3>'
-    + '<ul>';
+    + '<h3>Stats</h3>';
 
   for (var i = 0; i < pokemon.stats.length; i++) {
-    pokemonHTMLString += '<li>' + pokemon.stats[i].name + ': ' + pokemon.stats[i].value + '</li>';
+    pokemonHTMLString += '<p><strong>' + pokemon.stats[i].name + ':</strong> ' + pokemon.stats[i].value + '</p>';
   }
 
-  pokemonHTMLString += '</ul>';
+  if (pokemon.baseExperience !== null) {
+    pokemonHTMLString += '<p>Base Experience: ' + pokemon.baseExperience + '</p>';
+  }
 
   pokedex.innerHTML = pokemonHTMLString;
 };
