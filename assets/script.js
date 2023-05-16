@@ -29,6 +29,16 @@ displayRecentSearch();
 //* function to fetch pageid for specific pokemon
 function getPokemonWikiDetails (searchInput) {
 
+  function showErrorModal() {
+    var modal = document.getElementById("errorModal");
+    var modalContent = document.getElementById("errorModalContent");
+    modalContent.textContent = "Invalid Pokemon name. Please try again.";
+    modal.style.display = "block";
+    setTimeout(function() {
+      modal.style.display = "none";
+    }, 2000);
+  }
+
   fetch('https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=parse&format=json&page='+searchInput+'_(Pok%C3%A9mon)'
   )
   .then(function(response) {
@@ -45,6 +55,7 @@ function getPokemonWikiDetails (searchInput) {
     catch(error) {
     //TODO add a modal for if we cannot search the pokemone name (ex: spelling error?)
     console.log('dangit!')
+    showErrorModal();
     return;
     }
   })
@@ -156,4 +167,3 @@ console.log(event.target.textContent);
 getPokemonWikiDetails (event.target.textContent);
 })
 
-  

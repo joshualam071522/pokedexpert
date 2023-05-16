@@ -32,7 +32,7 @@
                 Search a Pokemon to learn about its stats, general information, and more!
             </p>
         </div>
-        <form class="box">
+        <form class="box" id="searchForm">
             <div class="field">
               <div class="control ">
                 <input id='searchField' class="input has-text-centered" type="text" placeholder="Enter Pokemon name here">
@@ -81,6 +81,14 @@
           </div>
         </div>
       </section>
+      <div id="errorModal" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+          <div id="errorModalContent" class="box">
+            <h2 class="title is-4">Error</h2>
+          </div>
+        </div>
+      </div>
       <script src="./assets/script.js"></script>
 
       
