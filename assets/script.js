@@ -14,10 +14,10 @@ function displayRecentSearch () {
   console.log(storedPokemon);
   //* for loop that creates a button element with name of pokemon in the array and appends to recent searches div
   for (let i = 0; i < storedPokemon.length; i++) {
-    const nameOfPokemon = storedPokemon[i];
-    let recentSearchesBtn = document.createElement('BUTTON');
-    recentSearchesBtn.classList.add('button', 'is-rounded', 'is-small','is-danger','is-light');
-    recentSearchesBtn.append(nameOfPokemon);
+    const nameOfPokemon = String(storedPokemon[i]);
+    let recentSearchesBtn = document.createElement('button');
+    recentSearchesBtn.classList.add('button', 'is-rounded', 'is-small', 'is-danger', 'is-light');
+    recentSearchesBtn.textContent = nameOfPokemon.charAt(0).toUpperCase() + nameOfPokemon.slice(1);
     recentSearchesListDiv.append(recentSearchesBtn);
   }
 }
