@@ -5,6 +5,7 @@ var searchButton = document.getElementById("search");
 var pokeimglistEl = document.getElementById('pokeimglist')
 var storedPokemon = JSON.parse(localStorage.getItem('pokemon')) || [];
 let recentSearchesListDiv = document.getElementById('recentSearchesList');
+var pokedex = document.getElementById('pokemonStats');
 
 //* code to display recent search
 function displayRecentSearch () {
@@ -20,33 +21,6 @@ function displayRecentSearch () {
     recentSearchesListDiv.append(recentSearchesBtn);
   }
 }
-//* function to retrieve pokemon sprite img
-function getPokemonSprite (searchInput) {
-  fetch ('https://pokeapi.co/api/v2/pokemon/'+searchInput+'')
-  .then (function (response) {
-    return response.json();
-  })
-  .then (function (data) {
-  //* clears HTML of element so that sprites from previous searches do not stay
-  pokeimglistEl.innerHTML = '';
-
-  //*creates h2 element for name of pokemon and appends
-  var pokeNameh2 = document.createElement('h2');
-  var retrievedName = data.species.name;
-  //* capitalizes the first letter of the name of pokemon for aesthetic purposes
-  pokeNameh2.textContent = retrievedName.charAt(0).toUpperCase() + retrievedName.slice(1);
-  pokeNameh2.classList.add('title', 'has-text-centered', 'is-4');
-  pokeimglistEl.appendChild(pokeNameh2);
-  
-  //*creates img element for pokemon and appends
-  var retrievedImg = data.sprites.front_default;
-  var pokemonImg = document.createElement('img');
-  pokemonImg.setAttribute('src', retrievedImg);
-  pokemonImg.setAttribute('alt', data.species.name);
-  pokemonImg.setAttribute('id', 'pokeimg');
-  pokeimglistEl.appendChild(pokemonImg);
-  })
-}
 
 //* calls display recent searches so it loads up with the page
 displayRecentSearch();
@@ -55,8 +29,8 @@ displayRecentSearch();
 //* example link for query: https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=query&format=json&prop=extracts&pageids=1161
 
 //* function to fetch pageid for specific pokemon
-function getPokemonWikiDetails (searchInput) {
-
+function getPokemonPageId (searchInput) {
+  //*Displays error message if cannot find searched pokemon (e.g. spelling error)
   function showErrorModal() {
     var modal = document.getElementById("errorModal");
     var modalContent = document.getElementById("errorModalContent");
@@ -89,7 +63,7 @@ function getPokemonWikiDetails (searchInput) {
   })
 }
 
-//* fetching text from pokemon text using pageid
+//* fetching text from pokemon wiki using pageid
 function searchPokemonArticle (pageid, searchInput) {
 
 localStorage.setItem('currentpageid', JSON.stringify(pageid));
@@ -179,41 +153,7 @@ function addSearchInputToRecentSearch (searchInput) {
   displayRecentSearch();
 }
 
-//* Add event listener to the search button
-searchButton.addEventListener("click", function(event) {
-  //* prevents form submission
-  event.preventDefault();
-  //* calls function to start searching API
-  getPokemonWikiDetails(searchInput.value.toLowerCase());
-  getPokemonSprite(searchInput.value.toLowerCase());
-  fetchPokemonstat(searchInput.value.toLowerCase());
-  //* resets the search bar
-  searchField.value = "";
-});
-
-//*event listener for recent searches
-recentSearchesListDiv.addEventListener('click', function(event) {
-console.log(event.target.textContent);
-getPokemonWikiDetails (event.target.textContent);
-fetchPokemonstat (event.target.textContent);
-
-//*function to uncapitalize first letter because pokeAPI requires lowercase pokemon name in search
-function upperCasetoLowercase () {
-  var upperCase = event.target.textContent;
-  //*replaces the first letter with a lowercase version of that letter
-  var lowerCase = upperCase.toLowerCase();
-  console.log(lowerCase);
-  //* passes in the lowercase pokemon name into the API so the search will work.
-  getPokemonSprite(lowerCase);
-}
-//* calls the function on event listener
-upperCasetoLowercase();
-//* getPokemonSprite(event.target.textContent);
-})
-
-var pokedex = document.getElementById('pokemonStats');
-
-fetchPokemonstat = function (searchInput) {
+fetchPokemonStat = function (searchInput) {
   //* fetch the Pokeapi and grab what we need
   fetch('https://pokeapi.co/api/v2/pokemon/' + searchInput, { 
     method: 'GET', //* GET is the default.
@@ -224,6 +164,9 @@ fetchPokemonstat = function (searchInput) {
       return res.json();
     })
     .then(function (data) {
+      //* calls function to display pokemon's sprite img
+      getPokemonSprite(data);
+
       //* when its fetched displays
       pokedex.innerHTML = '';
 
@@ -253,6 +196,30 @@ fetchPokemonstat = function (searchInput) {
     });
 };
 
+//* function to retrieve and display pokemon sprite img
+function getPokemonSprite (data) {
+
+  //* clears HTML of element so that sprites from previous searches do not stay
+  pokeimglistEl.innerHTML = '';
+
+  //*creates h2 element for name of pokemon and appends
+  var pokeNameh2 = document.createElement('h2');
+  var retrievedName = data.species.name;
+  //* capitalizes the first letter of the name of pokemon for aesthetic purposes
+  pokeNameh2.textContent = retrievedName.charAt(0).toUpperCase() + retrievedName.slice(1);
+  pokeNameh2.classList.add('title', 'has-text-centered', 'is-4');
+  pokeimglistEl.appendChild(pokeNameh2);
+  
+  //*creates img element for pokemon and appends
+  var retrievedImg = data.sprites.front_default;
+  var pokemonImg = document.createElement('img');
+  pokemonImg.setAttribute('src', retrievedImg);
+  pokemonImg.setAttribute('alt', data.species.name);
+  pokemonImg.setAttribute('id', 'pokeimg');
+  pokeimglistEl.appendChild(pokemonImg);
+}
+
+//* functions to convert stats to readable units for the displayPokemon function
 var convertToPounds = function (weightInHectograms) {
   //* Converts hectograms to pounds.
   var weightInPounds = weightInHectograms * 0.220462262;
@@ -301,3 +268,34 @@ var displayPokemon = function (pokemon) {
   //* display.
   pokedex.innerHTML = pokemonHTMLString;
   };
+
+  //* Add event listener to the search button
+searchButton.addEventListener("click", function(event) {
+  //* prevents form submission
+  event.preventDefault();
+  //* calls function to start searching API for wiki
+  getPokemonPageId (searchInput.value.toLowerCase());
+  //* calls function to start searching API from pokeAPI
+  fetchPokemonStat (searchInput.value.toLowerCase());
+  //* resets the search bar
+  searchField.value = "";
+});
+
+//*event listener for recent searches
+recentSearchesListDiv.addEventListener('click', function(event) {
+console.log(event.target.textContent);
+getPokemonPageId (event.target.textContent);
+
+//*function to uncapitalize first letter because pokeAPI requires lowercase pokemon name in search
+function recentSearchUncapitalized () {
+  var recentSearchInput = event.target.textContent;
+  //*replaces the first letter with a lowercase version of that letter
+  var recentSearchInputLowerCase = recentSearchInput.toLowerCase();
+  console.log(recentSearchInputLowerCase);
+  //* passes in the lowercase pokemon name into the API so the search will work.
+  fetchPokemonStat(recentSearchInputLowerCase);
+}
+//* calls the function on event listener
+recentSearchUncapitalized();
+//* getPokemonSprite(event.target.textContent);
+})
