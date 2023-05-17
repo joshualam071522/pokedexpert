@@ -186,7 +186,7 @@ searchButton.addEventListener("click", function(event) {
   //* calls function to start searching API
   getPokemonWikiDetails(searchInput.value.toLowerCase());
   getPokemonSprite(searchInput.value.toLowerCase());
-
+  fetchPokemonstat(searchInput.value.toLowerCase());
   //* resets the search bar
   searchField.value = "";
 });
@@ -195,6 +195,7 @@ searchButton.addEventListener("click", function(event) {
 recentSearchesListDiv.addEventListener('click', function(event) {
 console.log(event.target.textContent);
 getPokemonWikiDetails (event.target.textContent);
+fetchPokemonstat (event.target.textContent);
 
 //*function to uncapitalize first letter because pokeAPI requires lowercase pokemon name in search
 function upperCasetoLowercase () {
@@ -207,6 +208,96 @@ function upperCasetoLowercase () {
 }
 //* calls the function on event listener
 upperCasetoLowercase();
-// getPokemonSprite(event.target.textContent);
+//* getPokemonSprite(event.target.textContent);
 })
 
+var pokedex = document.getElementById('pokemonStats');
+
+fetchPokemonstat = function (searchInput) {
+  //* fetch the Pokeapi and grab what we need
+  fetch('https://pokeapi.co/api/v2/pokemon/' + searchInput, { 
+    method: 'GET', //* GET is the default.
+    credentials: 'same-origin', //* include, *same-origin, omit
+    redirect: 'follow', //* manual, *follow, error
+  })
+    .then(function (res) {
+      return res.json();
+    })
+    .then(function (data) {
+      //* when its fetched displays
+      pokedex.innerHTML = '';
+
+      //* stuff to be extracted.
+      var pokemon = {
+        type: data.types.map(function (type) { return capitalizeFirstLetter(type.type.name); }).join(', '), //* Get types
+        height: convertToInches(data.height), //* Get Height and convert it into inches
+        weight: convertToPounds(data.weight), //* Get  weight and convert it into pounds
+        abilities: data.abilities.map(function (ability) { return ability.ability.name; }).join(', '), //* Get abilities
+        //* Get stats
+        stats: data.stats.map(function (stat) { 
+          return {
+            name: stat.stat.name,
+            value: stat.base_stat
+          };
+        }), 
+        baseExperience: data.base_experience //* starting experience
+      };
+
+      //* Display info.
+      displayPokemon(pokemon);
+    })
+    .catch(function (error) {
+      //* catch any errors and display
+      console.log('Error:', error);
+      displayPokemon(null);
+    });
+};
+
+var convertToPounds = function (weightInHectograms) {
+  //* Converts hectograms to pounds.
+  var weightInPounds = weightInHectograms * 0.220462262;
+  return weightInPounds.toFixed(2); //* Round
+};
+
+//* Converts decimeters to inches.
+var convertToInches = function (heightInDecimeters) {
+  
+  var heightInInches = heightInDecimeters * 3.93701;
+  return heightInInches.toFixed(2); //* Round
+};
+
+//* capitalize everything from the string. first letter.
+var capitalizeFirstLetter = function (str) {
+  
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
+//* display pokemon.
+var displayPokemon = function (pokemon) {
+  
+  if (pokemon === null) {
+    pokedex.innerHTML = 'Pokemon not found.';
+    return;
+  }
+
+  //* display everything with the html string.
+  var pokemonHTMLString = '<p>Type: ' + pokemon.type + '</p>\n'
+    + '<p>Height: ' + pokemon.height + ' in</p>\n'
+    + '<p>Weight: ' + pokemon.weight + ' lbs</p>\n'
+    + '<p>Abilities: ' + pokemon.abilities + '</p>\n'
+    + '<h3>Stats:</h3>';
+
+  //*for the stats.
+  for (var i = 0; i < pokemon.stats.length; i++) {
+    var capitalizedStatName = capitalizeFirstLetter(pokemon.stats[i].name);
+    pokemonHTMLString += '<p><strong>' + capitalizedStatName + ':</strong> ' + pokemon.stats[i].value + '</p>';
+  }
+
+  //* put base experiece under stats. 
+  if (pokemon.baseExperience !== null) {
+    pokemonHTMLString += '<p><strong>Base Experience:</strong> ' + pokemon.baseExperience + '</p>';
+  }
+  
+  //* display.
+  pokedex.innerHTML = pokemonHTMLString;
+  };
