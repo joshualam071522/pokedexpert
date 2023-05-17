@@ -1,6 +1,14 @@
 .title {
   font-family: 'Press Start 2P', cursive;
 }
+.text {
+  font-family: 'VT323', monospace;
+  font-size: 20px;
+}
+.description{
+  font-family: 'VT323', monospace;
+  font-size: 30px;
+}
 
 .box.has-border {
   border: 2px solid black;
