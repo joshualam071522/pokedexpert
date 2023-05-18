@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,95 +11,91 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./assets/style.css" />
-</head>
-<body>
+  </head>
+
+  <body>
     <header>
-        <nav id = "navbar" class="navbar role="navigation" aria-label="main navigation">
-          <div class="navbar-brand">
-            <a class="navbar-item" href="#">
-                <img src="https://w7.pngwing.com/pngs/665/559/png-transparent-playstation-portable-accessory-pokedex-pokedex-electronics-gadget-electronic-device-thumbnail.png">
-            </a>
-          </div>
-        </nav>
-      </header>
-
-      
-      <section class="container is-fluid">
-        <div class="container field column has-text-centered">
-            <h1 class="title">Poké-Dexpert</h1>
+      <nav id = "navbar" class="navbar role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+          <a class="navbar-item" href="#">
+            <img src="https://w7.pngwing.com/pngs/665/559/png-transparent-playstation-portable-accessory-pokedex-pokedex-electronics-gadget-electronic-device-thumbnail.png">
+          </a>
         </div>
-        <div class="container field column content is-medium has-text-centered">
-            <p class="description">
-                Search a Pokémon to learn about its stats, general information, and more!
-            </p>
-        </div>
-        <form class="box" id="searchForm">
-            <div class="field">
-              <div class="control ">
-                <input id='searchField' class="input has-text-centered" type="text" placeholder="Enter Pokémon name here">
-              </div>
-            </div>
-          
-            <button id = "search" class="button is-danger is-fullwidth">Search</button>
-          </form>
-      </section>
+      </nav>
+    </header>
 
-
-      <div class="container">
-        <div class="column">
-          <div class="box is-full">
-            <h3 id="recentSearches" class="title is-6 has-text-centered">Recent Searches</h3>
-            <div class="has-text-centered">
-              <div id="recentSearchesList">
-              </div>
-            </div>
+    <section class="container is-fluid">
+      <div class="container field column has-text-centered">
+        <h1 class="title">Poké-Dexpert</h1>
+      </div>
+      <div class="container field column content is-medium has-text-centered">
+        <p class="description">Search a Pokémon to learn about its stats, general information, and more!</p>
+      </div>
+      <form class="box" id="searchForm">
+        <div class="field">
+          <div class="control ">
+            <input id='searchField' class="input has-text-centered" type="text" placeholder="Enter Pokémon name here">
           </div>
         </div>
-        
+        <button id = "search" class="button is-danger is-fullwidth">Search</button>
+      </form>
+    </section>
 
-        <section class="section">
-          <div class="columns is-centered">
-            <div class="column is-half">
-              <div class="columns is-multiline">
-                <div class="column is-full">
-                  <div id='pokeimglist' class="box has-red-border has-background-white">
-                    <figure id='pokeimglist' class="image is-2by2">
-                      <h2 class="title is-4 has-text-centered">Pokemon Sprite</h2>
-                      <h2 id='spriteplaceholderh2' class="text has-text-centered">Nothing to see here...</h2>
-                      <img id='spriteplaceholderimg' class="placeholderElements" src="./assets/images/pokemon types/pngegg__1__720.png" alt="snorlax sleeping">
-                    </figure>
-                  </div>
-                </div>
-                <div class="column is-full">
-                  <div id="statdiv" class="box has-red-border">
-                    <h2 class="title is-4 has-text-centered">Poké Stats</h2>
-                    <h2 id='statplaceholderh2' class="text has-text-centered">Nothing to see here...</h2>
-                    <img id='statplaceholderimg' class="placeholderElements" src="./assets/images/pokemon types/pngegg__1__720.png" alt="snorlax sleeping">
-                    <p class="text" id="pokemonStats"></p>
-                  </div>
-                </div>
-              </div>
+    <div class="container">
+      <div class="column">
+        <div class="box is-full">
+          <h3 id="recentSearches" class="title is-6 has-text-centered">Recent Searches</h3>
+          <div class="has-text-centered">
+            <div id="recentSearchesList">
             </div>
-            <div class="column is-one-fourth">
-              <div id="triviaBox" class="box has-red-border">
-                <h2 class="title is-4 has-text-centered">Trivia</h2>
-                <ul class="text" id="pokemonTrivia"></ul>
-                <h2 id='triviaplaceholderh2' class="text has-text-centered">Nothing to see here...</h2>
-                <img id='triviaplaceholderimg' class="placeholderElements" src="./assets/images/pokemon types/pngegg__1__720.png" alt="snorlax sleeping">
-              </div>
-            </div>
-          </div>
-        </section>
-      <div id="errorModal" class="modal">
-        <div class="modal-background"></div>
-        <div class="modal-content">
-          <div id="errorModalContent" class="box">
-            <h2 class="title is-4">Error</h2>
           </div>
         </div>
       </div>
-      <script src="./assets/script.js"></script>
-
-      
-</body>
+          
+    <section class="section">
+      <div class="columns is-centered">
+        <div class="column is-half">
+          <div class="columns is-multiline">
+            <div class="column is-full">
+              <div id='pokeimglist' class="box has-red-border has-background-white">
+                <figure id='pokeimglist' class="image is-2by2">
+                  <h2 class="title is-4 has-text-centered">Pokemon Sprite</h2>
+                  <h2 id='spriteplaceholderh2' class="text has-text-centered">Nothing to see here...</h2>
+                  <img id='spriteplaceholderimg' class="placeholderElements" src="./assets/images/pokemon types/pngegg__1__720.png" alt="snorlax sleeping">
+                </figure>
+              </div>
+            </div>
+            <div class="column is-full">
+              <div id="statdiv" class="box has-red-border">
+                <h2 class="title is-4 has-text-centered">Poké Stats</h2>
+                <h2 id='statplaceholderh2' class="text has-text-centered">Nothing to see here...</h2>
+                <img id='statplaceholderimg' class="placeholderElements" src="./assets/images/pokemon types/pngegg__1__720.png" alt="snorlax sleeping">
+                <p class="text" id="pokemonStats"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="column is-one-fourth">
+          <div id="triviaBox" class="box has-red-border">
+            <h2 class="title is-4 has-text-centered">Trivia</h2>
+            <ul class="text" id="pokemonTrivia"></ul>
+            <h2 id='triviaplaceholderh2' class="text has-text-centered">Nothing to see here...</h2>
+            <img id='triviaplaceholderimg' class="placeholderElements" src="./assets/images/pokemon types/pngegg__1__720.png" alt="snorlax sleeping">
+          </div>
+        </div>
+      </div>
+    </section>
+        
+    <div id="errorModal" class="modal">
+      <div class="modal-background"></div>
+      <div class="modal-content">
+        <div id="errorModalContent" class="box">
+          <h2 class="title is-4">Error</h2>
+        </div>
+      </div>
+    </div>
+        
+    <script src="./assets/script.js"></script>
+    
+  </body>
 </html>

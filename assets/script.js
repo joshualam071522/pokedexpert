@@ -1,7 +1,6 @@
 var pokemonTriviaEl = document.getElementById('pokemonTrivia');
 var pokemonTriviaDiv = document.getElementById('triviaBox');
 var statDiv = document.getElementById('statdiv');
-// Get the user input from the search field
 var searchInput = document.getElementById("searchField");
 var searchButton = document.getElementById("search");
 var pokeimglistEl = document.getElementById('pokeimglist')
@@ -19,14 +18,13 @@ function displayRecentSearch () {
     recentSearchesBtn.classList.add('button', 'is-rounded', 'is-small', 'is-danger', 'is-light');
     recentSearchesBtn.textContent = nameOfPokemon.charAt(0).toUpperCase() + nameOfPokemon.slice(1);
     recentSearchesListDiv.append(recentSearchesBtn);
-    
   }
 }
 
 //* calls display recent searches so it loads up with the page
 displayRecentSearch();
 
-//* example link for action=parse: https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=parse&format=json&page=Bulbasaur_(Pok%C3%A9mon)
+//* example link for to get pageid: https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=parse&format=json&page=Bulbasaur_(Pok%C3%A9mon)
 //* example link for query: https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=query&format=json&prop=extracts&pageids=1161
 
 //* function to fetch pageid for specific pokemon
@@ -66,28 +64,25 @@ function getPokemonPageId (searchInput) {
 //* fetching text from pokemon wiki using pageid
 function searchPokemonArticle (pageid, searchInput) {
 
-localStorage.setItem('currentpageid', JSON.stringify(pageid));
-
-fetch('https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=query&format=json&prop=extracts&pageids='+pageid+'', {
-  method: 'GET', //GET is the default.
-  credentials: 'same-origin', // include, *same-origin, omit
-  redirect: 'follow', // manual, *follow, error
-  })
-  .then(function (response) {
-    return response.json();
-  })
-  .then(function (data) {
+  fetch('https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=query&format=json&prop=extracts&pageids='+pageid+'', {
+    method: 'GET', //GET is the default.
+    credentials: 'same-origin', // include, *same-origin, omit
+    redirect: 'follow', // manual, *follow, error
+    })
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (data) {
 
     //* getting to root of info needed to extract
     var page = data.query.pages;
   
     var dataExtract = (page[pageid].extract);
 
-    //* Find index number for the word trivia in the text
+    //* Find index number for the word trivia in the text to begin slice
     var dataTrivia = dataExtract.indexOf("Trivia");
 
-    //* find index number of origin section, which is after trivia section, to slice
-    //TODO USE "\" TO TARGET QUOTATION MARKS WITHIN TEXT TO SLICE BETTER
+    //* find index number of origin section, which is after trivia section, to end slice
     var dataOrigin = dataExtract.indexOf(">Origin<");
 
     //* slice to only get the trivia section of the extracted text
@@ -122,6 +117,8 @@ fetch('https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=query&format
 
     //* resets the text content of trivia box so it does not show trivia from previous search
     pokemonTriviaEl.textContent = "";
+
+    //* function to create list for trivia facts
     var pokemonTriviaList = document.createElement("ul");
     pokemonTriviaList.style.listStyleType = "disc";
     pokemonTriviaList.style.paddingLeft = "20px";
@@ -138,10 +135,11 @@ fetch('https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=query&format
     }
     pokemonTriviaEl.appendChild(pokemonTriviaList);
 
+    //* pass in searchInput to add to local storage. Moved this function to bottom, so it does not execute if cannot find pageid
     addSearchInputToRecentSearch (searchInput);
   })
 }
-
+//* function to add searchinput to localstorage
 function addSearchInputToRecentSearch (searchInput) {
 
   //* prevents duplicate pokemon names in local storage
@@ -163,6 +161,7 @@ function addSearchInputToRecentSearch (searchInput) {
   displayRecentSearch();
 }
 
+//* fetches stats for pokemon
 fetchPokemonStat = function (searchInput) {
   //* fetch the Pokeapi and grab what we need
   fetch('https://pokeapi.co/api/v2/pokemon/' + searchInput, { 
@@ -170,34 +169,33 @@ fetchPokemonStat = function (searchInput) {
     credentials: 'same-origin', //* include, *same-origin, omit
     redirect: 'follow', //* manual, *follow, error
   })
-    .then(function (res) {
-      return res.json();
-    })
-    .then(function (data) {
-      //* calls function to display pokemon's sprite img
-      getPokemonSprite(data);
+  .then(function (res) {
+    return res.json();
+  })
+  .then(function (data) {
+    //* calls function to display pokemon's sprite img
+    getPokemonSprite(data);
 
-      //* when its fetched displays
-      pokedex.innerHTML = '';
+    //* when its fetched displays
+    pokedex.innerHTML = '';
 
-      //* stuff to be extracted.
-      var pokemon = {
-        type: data.types.map(function (type) { return capitalizeFirstLetter(type.type.name); }).join(', '), //* Get types
-        height: convertToInches(data.height), //* Get Height and convert it into inches
-        weight: convertToPounds(data.weight), //* Get  weight and convert it into pounds
-        abilities: data.abilities.map(function (ability) { return capitalizeFirstLetter(ability.ability.name); }).join(', '), //* Get abilities
-        //* Get stats
-        stats: data.stats.map(function (stat) { 
-          return {
-            name: stat.stat.name,
-            value: stat.base_stat
-          };
-        }), 
-        baseExperience: data.base_experience //* starting experience
-      };
-
-      //* Display info.
-      displayPokemon(pokemon);
+    //* stuff to be extracted.
+    var pokemon = {
+      type: data.types.map(function (type) { return capitalizeFirstLetter(type.type.name); }).join(', '), //* Get types
+      height: convertToInches(data.height), //* Get Height and convert it into inches
+      weight: convertToPounds(data.weight), //* Get  weight and convert it into pounds
+      abilities: data.abilities.map(function (ability) { return capitalizeFirstLetter(ability.ability.name); }).join(', '), //* Get abilities
+      //* Get stats
+      stats: data.stats.map(function (stat) { 
+        return {
+          name: stat.stat.name,
+          value: stat.base_stat
+        };
+      }), 
+      baseExperience: data.base_experience //* starting experience
+    };
+    //* Display info.
+    displayPokemon(pokemon);
     })
     .catch(function (error) {
       //* catch any errors and display
@@ -215,6 +213,7 @@ function getPokemonSprite (data) {
   //*creates h2 element for name of pokemon and appends
   var pokeNameh2 = document.createElement('h2');
   var retrievedName = data.species.name;
+  
   //* capitalizes the first letter of the name of pokemon for aesthetic purposes
   pokeNameh2.textContent = retrievedName.charAt(0).toUpperCase() + retrievedName.slice(1);
   pokeNameh2.classList.add('title', 'has-text-centered', 'is-4');
@@ -287,9 +286,9 @@ var displayPokemon = function (pokemon) {
   
   //* display.
   pokedex.innerHTML = pokemonHTMLString;
-  };
+};
 
-  //* Add event listener to the search button
+//* Add event listener to the search button
 searchButton.addEventListener("click", function(event) {
   //* prevents form submission
   event.preventDefault();
@@ -321,17 +320,17 @@ searchButton.addEventListener("click", function(event) {
 
 //*event listener for recent searches
 recentSearchesListDiv.addEventListener('click', function(event) {
-//*function to uncapitalize first letter because pokeAPI requires lowercase pokemon name in search
-function recentSearchUncapitalized () {
-  var recentSearchInput = event.target.textContent;
-  //*replaces the first letter with a lowercase version of that letter
-  var recentSearchInputLowerCase = recentSearchInput.toLowerCase();
-  //* passes in the lowercase pokemon name into the API so the search will work.
-  getPokemonPageId(recentSearchInputLowerCase);
-  fetchPokemonStat(recentSearchInputLowerCase);
-}
-//* calls the function on event listener
-recentSearchUncapitalized();
-//* getPokemonSprite(event.target.textContent);
+  //*function to uncapitalize first letter because pokeAPI requires lowercase pokemon name in search
+  function recentSearchUncapitalized () {
+    var recentSearchInput = event.target.textContent;
+    //*replaces the first letter with a lowercase version of that letter
+    var recentSearchInputLowerCase = recentSearchInput.toLowerCase();
+    //* passes in the lowercase pokemon name into the API so the search will work.
+    getPokemonPageId(recentSearchInputLowerCase);
+    fetchPokemonStat(recentSearchInputLowerCase);
+  }
+  //* calls the function on event listener
+  recentSearchUncapitalized();
+  //* getPokemonSprite(event.target.textContent);
 })
 
