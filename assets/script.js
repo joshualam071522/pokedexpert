@@ -1,4 +1,5 @@
-pokemonTriviaEl = document.getElementById('pokemonTrivia');
+var pokemonTriviaEl = document.getElementById('pokemonTrivia');
+var pokemonTriviaDiv = document.getElementById('triviaBox');
 // Get the user input from the search field
 var searchInput = document.getElementById("searchField");
 var searchButton = document.getElementById("search");
@@ -107,6 +108,16 @@ fetch('https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=query&format
     var dataSentenceSplit = dataHtmlRemoved.split("</li>");
 
     var pokemonTriviaEl = document.getElementById("pokemonTrivia");
+    
+    //* removes placeholder snorlax img and text
+    var placeholderimg = document.getElementById('triviaplaceholderimg');
+    var placeholderh2 = document.getElementById('triviaplaceholderh2');
+
+    if (placeholderimg) {
+      pokemonTriviaDiv.removeChild(placeholderimg);
+      pokemonTriviaDiv.removeChild(placeholderh2);
+    }
+
     //* resets the text content of trivia box so it does not show trivia from previous search
     pokemonTriviaEl.textContent = "";
     var pokemonTriviaList = document.createElement("ul");
