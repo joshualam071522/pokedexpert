@@ -17,6 +17,7 @@ function displayRecentSearch () {
     recentSearchesBtn.classList.add('button', 'is-rounded', 'is-small', 'is-danger', 'is-light');
     recentSearchesBtn.textContent = nameOfPokemon.charAt(0).toUpperCase() + nameOfPokemon.slice(1);
     recentSearchesListDiv.append(recentSearchesBtn);
+    
   }
 }
 
@@ -131,6 +132,21 @@ fetch('https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=query&format
 }
 
 function addSearchInputToRecentSearch (searchInput) {
+  //* Check if the search input is empty
+  function showErrorModal() {
+    var modal = document.getElementById("errorModal");
+    var modalContent = document.getElementById("errorModalContent");
+    modalContent.textContent = "No Pokemon were searched. Please type in a Pokemon.";
+    modal.style.display = "block";
+    setTimeout(function() {
+      modal.style.display = "none";
+    }, 2000);
+  }
+  if (!searchInput.trim()) {
+    showErrorModal()
+    return; //* Exit the function if it's empty
+  }
+
   //* prevents duplicate pokemon names in local storage
   var checkPokemonNameInRecentSearchIndex = storedPokemon.indexOf(searchInput);
   if (checkPokemonNameInRecentSearchIndex !== -1) {
@@ -295,3 +311,4 @@ function recentSearchUncapitalized () {
 recentSearchUncapitalized();
 //* getPokemonSprite(event.target.textContent);
 })
+
