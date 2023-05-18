@@ -245,11 +245,11 @@ var displayPokemon = function (pokemon) {
   }
 
   //* display everything with the html string.
-  var pokemonHTMLString = '<p>Type: ' + pokemon.type + '</p>\n'
-    + '<p>Height: ' + pokemon.height + ' in</p>\n'
-    + '<p>Weight: ' + pokemon.weight + ' lbs</p>\n'
-    + '<p>Abilities: ' + pokemon.abilities + '</p>\n'
-    + '<h3>Stats:</h3>';
+  var pokemonHTMLString = '<p><strong>Type:</strong> ' + pokemon.type + '</p>\n'
+    + '<p><strong>Height:</strong> ' + pokemon.height + ' in</p>\n'
+    + '<p><strong>Weight:</strong> ' + pokemon.weight + ' lbs</p>\n'
+    + '<p><strong>Abilities:</strong> ' + pokemon.abilities + '</p>\n'
+    + '<h3><u>Stats</u></h3>';
 
   //*for the stats.
   for (var i = 0; i < pokemon.stats.length; i++) {
