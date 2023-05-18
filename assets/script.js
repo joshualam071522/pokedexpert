@@ -1,4 +1,6 @@
-pokemonTriviaEl = document.getElementById('pokemonTrivia');
+var pokemonTriviaEl = document.getElementById('pokemonTrivia');
+var pokemonTriviaDiv = document.getElementById('triviaBox');
+var statDiv = document.getElementById('statdiv');
 // Get the user input from the search field
 var searchInput = document.getElementById("searchField");
 var searchButton = document.getElementById("search");
@@ -107,15 +109,24 @@ fetch('https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=query&format
     var dataSentenceSplit = dataHtmlRemoved.split("</li>");
 
     var pokemonTriviaEl = document.getElementById("pokemonTrivia");
+    
+    //* removes placeholder snorlax img and text
+    var placeholderimg = document.getElementById('triviaplaceholderimg');
+    var placeholderh2 = document.getElementById('triviaplaceholderh2');
+
+    if (placeholderimg) {
+      pokemonTriviaDiv.removeChild(placeholderimg);
+      pokemonTriviaDiv.removeChild(placeholderh2);
+    }
+
     //* resets the text content of trivia box so it does not show trivia from previous search
     pokemonTriviaEl.textContent = "";
     var pokemonTriviaList = document.createElement("ul");
     pokemonTriviaList.style.listStyleType = "disc";
     pokemonTriviaList.style.paddingLeft = "20px";
     
-    //TODO change datasentencesplit.length to 5 to show 3 items from trivia
     //* can use dataSentenceSplit.length if want to load up all the trivia facts
-    for (var i=0; i < 5; i++) {
+    for (var i=0; i < 10; i++) {
       //*removed .trim because it was showing up errors. might need to put back in?
       var sentence = dataSentenceSplit[i]; // Access the first element of the array
       if (sentence !== "") {
@@ -244,6 +255,14 @@ var displayPokemon = function (pokemon) {
     return;
   }
 
+  //* removes placeholder snorlax img and text
+  var placeholderimg = document.getElementById('statplaceholderimg');
+  var placeholderh2 = document.getElementById('statplaceholderh2');
+
+  if (placeholderimg) {
+    statDiv.removeChild(placeholderimg);
+    statDiv.removeChild(placeholderh2);
+  }
   //* display everything with the html string.
   var pokemonHTMLString = '<p><strong>Type:</strong> ' + pokemon.type + '</p>\n'
     + '<p><strong>Height:</strong> ' + pokemon.height + ' in</p>\n'
