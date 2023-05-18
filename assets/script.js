@@ -1,5 +1,6 @@
 var pokemonTriviaEl = document.getElementById('pokemonTrivia');
 var pokemonTriviaDiv = document.getElementById('triviaBox');
+var statDiv = document.getElementById('statdiv');
 // Get the user input from the search field
 var searchInput = document.getElementById("searchField");
 var searchButton = document.getElementById("search");
@@ -255,6 +256,14 @@ var displayPokemon = function (pokemon) {
     return;
   }
 
+  //* removes placeholder snorlax img and text
+  var placeholderimg = document.getElementById('statplaceholderimg');
+  var placeholderh2 = document.getElementById('statplaceholderh2');
+
+  if (placeholderimg) {
+    statDiv.removeChild(placeholderimg);
+    statDiv.removeChild(placeholderh2);
+  }
   //* display everything with the html string.
   var pokemonHTMLString = '<p><strong>Type:</strong> ' + pokemon.type + '</p>\n'
     + '<p><strong>Height:</strong> ' + pokemon.height + ' in</p>\n'
