@@ -143,20 +143,6 @@ fetch('https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=query&format
 }
 
 function addSearchInputToRecentSearch (searchInput) {
-  //* Check if the search input is empty
-  function showErrorModal() {
-    var modal = document.getElementById("errorModal");
-    var modalContent = document.getElementById("errorModalContent");
-    modalContent.textContent = "No Pokemon were searched. Please type in a Pokemon.";
-    modal.style.display = "block";
-    setTimeout(function() {
-      modal.style.display = "none";
-    }, 2000);
-  }
-  if (!searchInput.trim()) {
-    showErrorModal()
-    return; //* Exit the function if it's empty
-  }
 
   //* prevents duplicate pokemon names in local storage
   var checkPokemonNameInRecentSearchIndex = storedPokemon.indexOf(searchInput);
@@ -307,6 +293,24 @@ var displayPokemon = function (pokemon) {
 searchButton.addEventListener("click", function(event) {
   //* prevents form submission
   event.preventDefault();
+
+   //* Displays error if the search input is empty
+   function showErrorModal() {
+    var modal = document.getElementById("errorModal");
+    var modalContent = document.getElementById("errorModalContent");
+    modalContent.textContent = "No Pokemon were searched. Please type in a Pokemon.";
+    modal.style.display = "block";
+    setTimeout(function() {
+      modal.style.display = "none";
+    }, 2000);
+  }
+  
+  //*checks if nothing was input into the search bar
+  if (!searchInput.value.trim()) {
+    showErrorModal()
+    return; //* Exit the function if it's empty
+  }
+  
   //* calls function to start searching API for wiki
   getPokemonPageId (searchInput.value.toLowerCase());
   //* calls function to start searching API from pokeAPI
