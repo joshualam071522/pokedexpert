@@ -172,7 +172,7 @@ fetchPokemonStat = function (searchInput) {
         type: data.types.map(function (type) { return capitalizeFirstLetter(type.type.name); }).join(', '), //* Get types
         height: convertToInches(data.height), //* Get Height and convert it into inches
         weight: convertToPounds(data.weight), //* Get  weight and convert it into pounds
-        abilities: data.abilities.map(function (ability) { return ability.ability.name; }).join(', '), //* Get abilities
+        abilities: data.abilities.map(function (ability) { return capitalizeFirstLetter(ability.ability.name); }).join(', '), //* Get abilities
         //* Get stats
         stats: data.stats.map(function (stat) { 
           return {
@@ -254,12 +254,14 @@ var displayPokemon = function (pokemon) {
   //*for the stats.
   for (var i = 0; i < pokemon.stats.length; i++) {
     var capitalizedStatName = capitalizeFirstLetter(pokemon.stats[i].name);
+   
     pokemonHTMLString += '<p><strong>' + capitalizedStatName + ':</strong> ' + pokemon.stats[i].value + '</p>';
   }
 
   //* put base experiece under stats. 
   if (pokemon.baseExperience !== null) {
     pokemonHTMLString += '<p><strong>Base Experience:</strong> ' + pokemon.baseExperience + '</p>';
+    
   }
   
   //* display.
