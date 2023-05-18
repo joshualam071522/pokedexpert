@@ -10,8 +10,6 @@ var pokedex = document.getElementById('pokemonStats');
 //* code to display recent search
 function displayRecentSearch () {
   recentSearchesListDiv.innerHTML = '';
-  //* check local storage of array
-  console.log(storedPokemon);
   //* for loop that creates a button element with name of pokemon in the array and appends to recent searches div
   for (let i = 0; i < storedPokemon.length; i++) {
     const nameOfPokemon = String(storedPokemon[i]);
@@ -50,7 +48,6 @@ function getPokemonPageId (searchInput) {
   .then(function (data) {
     //* catch error to stop if can't find pageid using fetch
     try {
-    console.log(data.parse.pageid);
     var pageid = data.parse.pageid;
     searchPokemonArticle(pageid, searchInput);
     }
@@ -248,11 +245,11 @@ var displayPokemon = function (pokemon) {
   }
 
   //* display everything with the html string.
-  var pokemonHTMLString = '<p>Type: ' + pokemon.type + '</p>\n'
-    + '<p>Height: ' + pokemon.height + ' in</p>\n'
-    + '<p>Weight: ' + pokemon.weight + ' lbs</p>\n'
-    + '<p>Abilities: ' + pokemon.abilities + '</p>\n'
-    + '<h3>Stats:</h3>';
+  var pokemonHTMLString = '<p><strong>Type:</strong> ' + pokemon.type + '</p>\n'
+    + '<p><strong>Height:</strong> ' + pokemon.height + ' in</p>\n'
+    + '<p><strong>Weight:</strong> ' + pokemon.weight + ' lbs</p>\n'
+    + '<p><strong>Abilities:</strong> ' + pokemon.abilities + '</p>\n'
+    + '<h3><u>Stats</u></h3>';
 
   //*for the stats.
   for (var i = 0; i < pokemon.stats.length; i++) {
@@ -283,16 +280,13 @@ searchButton.addEventListener("click", function(event) {
 
 //*event listener for recent searches
 recentSearchesListDiv.addEventListener('click', function(event) {
-console.log(event.target.textContent);
-getPokemonPageId (event.target.textContent);
-
 //*function to uncapitalize first letter because pokeAPI requires lowercase pokemon name in search
 function recentSearchUncapitalized () {
   var recentSearchInput = event.target.textContent;
   //*replaces the first letter with a lowercase version of that letter
   var recentSearchInputLowerCase = recentSearchInput.toLowerCase();
-  console.log(recentSearchInputLowerCase);
   //* passes in the lowercase pokemon name into the API so the search will work.
+  getPokemonPageId(recentSearchInputLowerCase);
   fetchPokemonStat(recentSearchInputLowerCase);
 }
 //* calls the function on event listener
