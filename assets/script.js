@@ -284,7 +284,7 @@ searchButton.addEventListener("click", function(event) {
 //*event listener for recent searches
 recentSearchesListDiv.addEventListener('click', function(event) {
 console.log(event.target.textContent);
-getPokemonPageId (event.target.textContent);
+
 
 //*function to uncapitalize first letter because pokeAPI requires lowercase pokemon name in search
 function recentSearchUncapitalized () {
@@ -293,6 +293,7 @@ function recentSearchUncapitalized () {
   var recentSearchInputLowerCase = recentSearchInput.toLowerCase();
   console.log(recentSearchInputLowerCase);
   //* passes in the lowercase pokemon name into the API so the search will work.
+  getPokemonPageId(recentSearchInputLowerCase);
   fetchPokemonStat(recentSearchInputLowerCase);
 }
 //* calls the function on event listener
