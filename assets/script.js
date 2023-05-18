@@ -125,9 +125,8 @@ fetch('https://bulbapedia.bulbagarden.net/w/api.php?origin=*&action=query&format
     pokemonTriviaList.style.listStyleType = "disc";
     pokemonTriviaList.style.paddingLeft = "20px";
     
-    //TODO change datasentencesplit.length to 5 to show 3 items from trivia
     //* can use dataSentenceSplit.length if want to load up all the trivia facts
-    for (var i=0; i < 5; i++) {
+    for (var i=0; i < 10; i++) {
       //*removed .trim because it was showing up errors. might need to put back in?
       var sentence = dataSentenceSplit[i]; // Access the first element of the array
       if (sentence !== "") {
